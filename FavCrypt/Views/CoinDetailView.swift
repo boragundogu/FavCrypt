@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CoinDetailView: View {
     @StateObject private var detailViewModel: CoinDetailViewModel
-    var coinId: Int // Binding değil, sadece bir Int
+    var coinId: Int
 
     init(coinId: Int) {
         self.coinId = coinId
@@ -27,7 +27,7 @@ struct CoinDetailView: View {
             }
         }
         .onAppear {
-            detailViewModel.coinId = coinId // CoinDetailViewModel içindeki coinId'yi ayarla
+            detailViewModel.coinId = coinId
             detailViewModel.fetchCoinDetail()
         }
     }

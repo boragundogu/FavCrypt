@@ -8,21 +8,57 @@
 import SwiftUI
 
 func formatPrice(_ price: Double) -> String {
-    let numberFormatter = NumberFormatter()
-    numberFormatter.numberStyle = .decimal
-    numberFormatter.minimumFractionDigits = 2
-    numberFormatter.maximumFractionDigits = 8
-    return numberFormatter.string(from: NSNumber(value: price)) ?? "\(price)"
+    let formattedPrice: String
+    
+    if price >= 1000.0 {
+        formattedPrice = String(format: "%.2f", price)
+    }
+    else if price >= 1.0 {
+        formattedPrice = String(format: "%.2f", price)
+    } 
+    else if price > 0.0001 {
+        formattedPrice = String(format: "%.4f", price)
+    }
+    else if price > 0.00001 {
+        formattedPrice = String(format: "%.6f", price)
+    }
+    else {
+        formattedPrice = String(format: "%.8f", price)
+    }
+
+    return formattedPrice
 }
+
+import SwiftUI
 
 struct CoinRow: View {
     var coin: Coin
-    
+
     var body: some View {
         HStack {
-            Text("\(coin.cmc_rank)")
-            Text("\(coin.name)" + " " + "\(coin.symbol)").foregroundStyle(.red)
+            Text("\(coin.cmc_rank)").foregroundStyle(.white)
+                .frame(width: 30, height: 30, alignment: .leading)
+            AsyncImage(url: URL(string: "https://s2.coinmarketcap.com/static/img/coins/64x64/\(coin.id).png")) { phase in
+                switch phase {
+                case .empty:
+                    Image(systemName: "photo")
+                        .frame(width: 50, height: 50, alignment: .center)
+                case .success(let image):
+                    image.resizable()
+                        .scaledToFill()
+                        .frame(width: 30, height: 30, alignment: .center)
+                        .clipShape(Circle())
+                case .failure:
+                    Image(systemName: "photo")
+                        .frame(width: 50, height: 50, alignment: .center)
+                @unknown default:
+                    EmptyView()
+                }
+            }
+            Text("\(coin.symbol)").foregroundStyle(.white)
+                .frame(width: 70, height: 70, alignment: .leading)
             Text(formatPrice(coin.price)).foregroundStyle(.green)
+                .frame(width: 90, height: 90, alignment: .leading)
         }
         .background(
             NavigationLink(destination: CoinDetailView(coinId: coin.id)) {}.opacity(0)
@@ -37,3 +73,4 @@ struct CoinRow: View {
         .tint(Color("favColor"))
     }
 }
+

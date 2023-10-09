@@ -9,19 +9,16 @@ import Foundation
 
 class CoinDetailViewModel: ObservableObject {
     @Published var coinInfo: CoinInfo?
-    @Published var coinId: Int = 0 // Tıklanan coin'in id'si
+    @Published var coinId: Int = 0
 
-    // CoinMarketCap API için gerekli olan base URL
     let baseURL = "https://pro-api.coinmarketcap.com/v2/cryptocurrency/info"
 
-    // API anahtarını burada tanımlayabilirsiniz
     let apiKey = "0c72d01c-4dac-4df2-8cc8-b76dd663d9d7"
 
     func fetchCoinDetail() {
-        // CoinMarketCap API'sine istek yapmak için bir URL oluşturun
         if var urlComponents = URLComponents(string: baseURL) {
             urlComponents.queryItems = [
-                URLQueryItem(name: "id", value: "\(coinId)") // Tıklanan coin'in id'sini gönderin
+                URLQueryItem(name: "id", value: "\(coinId)")
             ]
 
             if let url = urlComponents.url {
@@ -38,9 +35,7 @@ class CoinDetailViewModel: ObservableObject {
                         do {
                             let decoder = JSONDecoder()
                             let coinDetailData = try decoder.decode(CoinDetailData.self, from: data)
-                            // CoinDetailData modeli, API yanıtını işler
-
-                            // CoinInfo modelini alabiliriz
+                            
                             if let coinInfo = coinDetailData.data["\(self.coinId)"] {
                                 DispatchQueue.main.async {
                                     self.coinInfo = coinInfo
