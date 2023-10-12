@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var coinViewModel = CoinListViewModel()
     @State private var isReversed = true
-    @State private var isTotalCapReversed = true
+    @State private var isPercentReversed = true
     @State private var isPriceReversed = true
     @State private var currentSortBy = ""
     
@@ -21,7 +21,7 @@ struct ContentView: View {
                             Button(action: {
                                 currentSortBy = ""
                                 isPriceReversed = true
-                                isTotalCapReversed = true
+                                isPercentReversed = true
                                 isReversed.toggle()
                             })
                             {
@@ -31,23 +31,22 @@ struct ContentView: View {
                                 
                             }
                             Button(action: {
-                                currentSortBy = "totalCap"
-                                isTotalCapReversed.toggle()
-                                isPriceReversed = true
-                                isReversed = false
-                            }) {
-                                Image(systemName: isTotalCapReversed ? "chart.pie" : "chart.pie.fill")
-                                    .scaleEffect(1.4)
-                                    .padding()
-                            }
-                            
-                            Button(action: {
                                 currentSortBy = "price"
                                 isPriceReversed.toggle()
                                 isReversed = false
-                                isTotalCapReversed = true
+                                isPercentReversed = true
                             }) {
                                 Image(systemName: isPriceReversed ? "dollarsign.circle" : "dollarsign.circle.fill")
+                                    .scaleEffect(1.4)
+                                    .padding()
+                            }
+                            Button(action: {
+                                currentSortBy = "totalCap"
+                                isPercentReversed.toggle()
+                                isPriceReversed = true
+                                isReversed = false
+                            }) {
+                                Image(systemName: "percent")
                                     .scaleEffect(1.4)
                                     .padding()
                             }
@@ -59,7 +58,7 @@ struct ContentView: View {
                                 case "price":
                                     return isPriceReversed ? coinViewModel.coinData.sorted(by: {$0.price < $1.price}) : coinViewModel.coinData.sorted(by: {$0.price > $1.price})
                                 case "totalCap":
-                                    return isTotalCapReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank})
+                                    return isPercentReversed ? coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h < $1.quote.USD.percent_change_24h}) : coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h > $1.quote.USD.percent_change_24h})
                                 default:
                                     return isReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank})
                                 }
@@ -77,7 +76,8 @@ struct ContentView: View {
                     .refreshable {
                         coinViewModel.fetchCoinData()
                     }
-                    .navigationTitle("Coins")
+                    .navigationTitle("")
+                    .navigationBarTitleDisplayMode(.inline)
                     .onAppear {
                         coinViewModel.fetchCoinData()
                 }

@@ -55,13 +55,23 @@ struct CoinRow: View {
                     EmptyView()
                 }
             }
-            Text("\(coin.symbol)").foregroundStyle(.white)
+            Text("\(coin.symbol)").foregroundStyle(.gray)
                 .frame(width: 70, height: 70, alignment: .leading)
-            Text(formatPrice(coin.price)).foregroundStyle(.green)
+            Text(formatPrice(coin.price)).foregroundStyle(.white)
                 .frame(width: 90, height: 90, alignment: .leading)
+            if coin.quote.USD.percent_change_24h < 0.0 {
+                Text((String(coin.quote.USD.percent_change_24h).prefix(5)))
+                    .frame(width: 90, height: 90, alignment: .leading)
+                    .foregroundStyle(.red)
+            }
+            else{
+                Text((String(coin.quote.USD.percent_change_24h).prefix(5)))
+                    .frame(width: 90, height: 90, alignment: .leading)
+                    .foregroundStyle(.green)
+            }
         }
         .background(
-            NavigationLink(destination: CoinDetailView(coinId: coin.id)) {}.opacity(0)
+            NavigationLink(destination: CoinDetailView(coinId: coin.id, coin: coin)) {}.opacity(0)
         )
         .swipeActions(edge: .trailing) {
             Button {
