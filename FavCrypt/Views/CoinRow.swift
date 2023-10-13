@@ -59,15 +59,25 @@ struct CoinRow: View {
                 .frame(width: 70, height: 70, alignment: .leading)
             Text(formatPrice(coin.price)).foregroundStyle(.white)
                 .frame(width: 90, height: 90, alignment: .leading)
-            if coin.quote.USD.percent_change_24h < 0.0 {
-                Text((String(coin.quote.USD.percent_change_24h).prefix(5)))
-                    .frame(width: 90, height: 90, alignment: .leading)
-                    .foregroundStyle(.red)
+            if coin.quote.USD.percent_change_24h > 0.0 {
+                Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
+                    .padding(10)
+                    .background {
+                        Rectangle()
+                            .foregroundStyle(.green)
+                            .clipShape(.rect(cornerRadius: 10))
+                            .frame(width: 65, height: 50, alignment: .center)
+                    }
             }
             else{
-                Text((String(coin.quote.USD.percent_change_24h).prefix(5)))
-                    .frame(width: 90, height: 90, alignment: .leading)
-                    .foregroundStyle(.green)
+                Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
+                    .padding(10)
+                    .background {
+                        Rectangle()
+                            .foregroundStyle(.red)
+                            .clipShape(.rect(cornerRadius: 10))
+                            .frame(width: 65, height: 50, alignment: .center)
+                    }
             }
         }
         .background(
@@ -84,3 +94,7 @@ struct CoinRow: View {
     }
 }
 
+
+#Preview {
+    CoinRow(coin: Coin(id: 1, name: "Bitcoin", symbol: "BTC", quote: .init(USD: .init(price: 1, volume_24h: 1, market_cap: 1, percent_change_24h: 0.25)), cmc_rank: 1))
+}
