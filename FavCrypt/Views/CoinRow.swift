@@ -7,32 +7,16 @@
 
 import SwiftUI
 
-func formatPrice(_ price: Double) -> String {
-    let formattedPrice: String
-    
-    if price >= 1000.0 {
-        formattedPrice = String(format: "%.2f", price)
-    }
-    else if price >= 1.0 {
-        formattedPrice = String(format: "%.2f", price)
-    } 
-    else if price > 0.0001 {
-        formattedPrice = String(format: "%.4f", price)
-    }
-    else if price > 0.00001 {
-        formattedPrice = String(format: "%.6f", price)
-    }
-    else {
-        formattedPrice = String(format: "%.8f", price)
-    }
-
-    return formattedPrice
-}
-
 import SwiftUI
 
 struct CoinRow: View {
+    @StateObject private var listViewModel: CoinListViewModel
     var coin: Coin
+    
+    init(coin: Coin) {
+        _listViewModel = StateObject(wrappedValue: CoinListViewModel())
+        self.coin = coin
+    }
 
     var body: some View {
         HStack {
@@ -55,28 +39,35 @@ struct CoinRow: View {
                     EmptyView()
                 }
             }
+            .padding(.leading, -10)
             Text("\(coin.symbol)").foregroundStyle(.gray)
                 .frame(width: 70, height: 70, alignment: .leading)
-            Text(formatPrice(coin.price)).foregroundStyle(.white)
+            Text(listViewModel.formatPrice(coin.price)).foregroundStyle(.white)
                 .frame(width: 90, height: 90, alignment: .leading)
+                .padding(.leading, -20)
+           // Text()
             if coin.quote.USD.percent_change_24h > 0.0 {
                 Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
-                    .padding(10)
+                    .frame(width: 70, height: 70, alignment: .center)
+                    .padding(.leading, 45)
                     .background {
                         Rectangle()
                             .foregroundStyle(.green)
                             .clipShape(.rect(cornerRadius: 10))
-                            .frame(width: 65, height: 50, alignment: .center)
+                            .frame(width: 67, height: 31, alignment: .center)
+                            .padding(.leading, 45)
                     }
             }
             else{
                 Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
-                    .padding(10)
+                    .frame(width: 70, height: 70, alignment: .center)
+                    .padding(.leading, 45)
                     .background {
                         Rectangle()
                             .foregroundStyle(.red)
                             .clipShape(.rect(cornerRadius: 10))
-                            .frame(width: 65, height: 50, alignment: .center)
+                            .frame(width: 67, height: 31, alignment: .center)
+                            .padding(.leading, 45)
                     }
             }
         }
@@ -96,5 +87,5 @@ struct CoinRow: View {
 
 
 #Preview {
-    CoinRow(coin: Coin(id: 1, name: "Bitcoin", symbol: "BTC", quote: .init(USD: .init(price: 1, volume_24h: 1, market_cap: 1, percent_change_24h: 0.25)), cmc_rank: 1))
+    CoinRow(coin: Coin(id: 1, name: "Bitcoin", symbol: "BTC", quote: .init(USD: .init(price: 26754.30, volume_24h: 1, market_cap: 1, percent_change_24h: 0.25)), cmc_rank: 1))
 }

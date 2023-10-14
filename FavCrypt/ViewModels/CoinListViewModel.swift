@@ -29,4 +29,26 @@ class CoinListViewModel: ObservableObject {
             }
         }
     
+    func formatPrice(_ price: Double) -> String {
+        let formattedPrice: String
+        
+        if price >= 1000.0 {
+            formattedPrice = String(format: "%.2f", price)
+        }
+        else if price >= 1.0 {
+            formattedPrice = String(format: "%.2f", price)
+        }
+        else if price > 0.0001 {
+            formattedPrice = String(format: "%.4f", price)
+        }
+        else if price > 0.00001 {
+            formattedPrice = String(format: "%.6f", price)
+        }
+        else {
+            formattedPrice = String(format: "%.8f", price)
+        }
+
+        return formattedPrice
+    }
+    
 }
