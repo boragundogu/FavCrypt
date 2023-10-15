@@ -13,6 +13,7 @@ struct CoinDetailView: View {
     @State private var isShowingAlert = false
     var coinId: Int
     var coin: Coin
+    @State private var isShowingLinks = false
     
     init(coinId: Int, coin: Coin) {
         self.coinId = coinId
@@ -74,7 +75,7 @@ struct CoinDetailView: View {
                                 Text("$" + "\(listViewModel.formatPrice(coin.price))")
                                     .fontWeight(.bold)
                                     .font(.system(size: 24))
-                                    
+                                
                                 Spacer()
                                 if coin.quote.USD.percent_change_24h > 0 {
                                     Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
@@ -100,20 +101,263 @@ struct CoinDetailView: View {
                             .padding(.leading, 20)
                         }
                     }
-                    .padding(.bottom, 550)
+                    Text(coinInfo.description)
+                        .padding()
                     
+                    Text("Official Links")
+                        .fontWeight(.bold)
+                        .font(.system(size: 23))
+                        .padding(.leading, -175)
+                    
+                    HStack {
+                        Spacer()
+                        Button {
+                            if coinInfo.urls.website != [] {
+                                if let url = URL(string: coinInfo.urls.website.first ?? "No website found.") {
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: "network")
+                                    .foregroundStyle(.white)
+                                    .opacity(0.8)
+                                Text("Website")
+                                    .foregroundStyle(.white)
+                            }
+                            .background {
+                                Rectangle()
+                                    .clipShape(.rect(cornerRadius: 10))
+                                    .foregroundColor(.gray)
+                                    .frame(width: 107, height: 31, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                        }
+                        .opacity(coinInfo.urls.website == [] ? 0 : 1)
+                        Spacer()
+                        Spacer()
+                        Button {
+                            if coinInfo.urls.technical_doc != [] {
+                                if let url = URL(string: coinInfo.urls.technical_doc.first ?? "No website found.") {
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                        }label: {
+                            HStack {
+                                Image(systemName: "doc")
+                                    .foregroundStyle(.white)
+                                    .opacity(0.8)
+                                Text("Whitepaper")
+                                    .foregroundStyle(.white)
+                            }
+                            .background {
+                                Rectangle()
+                                    .clipShape(.rect(cornerRadius: 10))
+                                    .foregroundColor(.gray)
+                                    .frame(width: 137, height: 31, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            }
+                        }
+                        Spacer()
+                        Spacer()
+                        Button {
+                            if coinInfo.urls.source_code != [] {
+                                if let url = URL(string: coinInfo.urls.source_code.first ?? "No website found.") {
+                                    UIApplication.shared.open(url)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Image("github")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20, alignment: .center)
+                                    .foregroundStyle(.white)
+                                    .opacity(0.8)
+                                Text("GitHub")
+                                    .foregroundStyle(.white)
+                            }
+                            .background {
+                                Rectangle()
+                                    .clipShape(.rect(cornerRadius: 10))
+                                    .foregroundColor(.gray)
+                                    .frame(width: 100, height: 31, alignment: .center)
+                            }
+                        }
+                        .opacity(coinInfo.urls.source_code == [] ? 0 : 1)
+                        Spacer()
+                    }
+                    .padding(10)
+                    
+                    Text("Socials")
+                        .fontWeight(.bold)
+                        .font(.system(size: 23))
+                        .padding(.leading, -175)
+                        .padding(.bottom, -3)
+                    
+                    HStack {
+                        Button {
+                            if coinInfo.urls.twitter != [] {
+                                if let twitterURL = URL(string: coinInfo.urls.twitter.first ?? "") {
+                                    if let username = twitterURL.pathComponents.last {
+                                        if !username.isEmpty {
+                                            if let appURL = URL(string: "twitter://user?screen_name=\(username)") {
+                                                if UIApplication.shared.canOpenURL(appURL) {
+                                                    UIApplication.shared.open(appURL)
+                                                    return
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if let webURL = URL(string: coinInfo.urls.twitter.first ?? "") {
+                                    UIApplication.shared.open(webURL)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Image("x")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20, alignment: .center)
+                                    .foregroundStyle(.white)
+                                    .opacity(0.8)
+                                Text("Twitter")
+                                    .foregroundStyle(.white)
+                            }
+                            .padding()
+                            .background {
+                                Rectangle()
+                                    .clipShape(.rect(cornerRadius: 10))
+                                    .foregroundColor(.gray)
+                                    .frame(width: 100, height: 31, alignment: .center)
+                            }
+                            .disabled(coinInfo.urls.twitter == [] ? true : false)
+                            .opacity(coinInfo.urls.twitter == [] ? 0.2 : 1)
+                        }
+                        if !coinInfo.urls.facebook.isEmpty {
+                            ButtonWithIcon(imageName: "facebook", text: "Facebook", url: coinInfo.urls.facebook.first ?? "", width: 120, height: 30)
+                                .padding()
+                        } else {
+                            ButtonWithIcon(imageName: "facebook", text: "Facebook", url: coinInfo.urls.facebook.first ?? "", width: 120, height: 30)
+                                .padding()
+                                .disabled(true)
+                                .opacity(0.2)
+                        }
+                        if !coinInfo.urls.reddit.isEmpty {
+                            ButtonWithIcon(imageName: "reddit", text: "Reddit", url: coinInfo.urls.reddit.first ?? "", width: 100, height: 30)
+                                .padding()
+                        } else {
+                            ButtonWithIcon(imageName: "reddit", text: "Reddit", url: coinInfo.urls.reddit.first ?? "", width: 100, height: 30)
+                                .padding()
+                                .disabled(true)
+                                .opacity(0.2)
+                        }
+                    }
+                    
+                    Text("Network Information")
+                        .fontWeight(.bold)
+                        .font(.system(size: 23))
+                        .padding(.leading, -125)
+                        .padding(.bottom, 15)
+                    
+                    
+                    HStack {
+                        VStack {
+                            Button {
+                                isShowingLinks.toggle()
+                            } label: {
+                                HStack {
+                                    Image(systemName: "network")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 20, height: 20, alignment: .center)
+                                        .foregroundStyle(.white)
+                                        .opacity(0.8)
+                                    Text("Chain Explorers")
+                                        .foregroundStyle(.white)
+                                }
+                                .background {
+                                    Rectangle()
+                                        .clipShape(.rect(cornerRadius: 10))
+                                        .foregroundColor(.gray)
+                                        .frame(width: 170, height: 30, alignment: .center)
+                                }
+                            }
+                            if isShowingLinks {
+                                ForEach(coinInfo.urls.explorer, id: \.self) { explorer in
+//                                    let username = explorer.pathComponents.first
+                                    VStack {
+                                        Button {
+                                            
+                                            if let webURL = URL(string: explorer) {
+                                                UIApplication.shared.open(webURL)
+                                            }
+                                        } label: {
+                                            HStack {
+                                                Image(systemName: "network")
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 20, height: 20, alignment: .center)
+                                                    .foregroundStyle(.white)
+                                                    .opacity(0.8)
+                                            }
+                                            .background {
+                                                Rectangle()
+                                                    .clipShape(.rect(cornerRadius: 10))
+                                                    .foregroundColor(.gray)
+                                                    .frame(width: 260, height: 25, alignment: .center)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            .onAppear {
-                detailViewModel.coinId = coinId
-                detailViewModel.fetchCoinDetail()
+                    .onAppear {
+                        detailViewModel.coinId = coinId
+                        detailViewModel.fetchCoinDetail()
+                    }
+            }
+            .ignoresSafeArea()
+        }
+    }
+    
+    struct ButtonWithIcon: View {
+        var imageName: String
+        var text: String
+        var url: String
+        var width: CGFloat
+        var height: CGFloat
+        
+        var body: some View {
+            Button {
+                
+                if let webURL = URL(string: url) {
+                    UIApplication.shared.open(webURL)
+                }
+            } label: {
+                HStack {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20, alignment: .center)
+                        .foregroundStyle(.white)
+                        .opacity(0.8)
+                    Text(text)
+                        .foregroundStyle(.white)
+                }
+                .background {
+                    Rectangle()
+                        .clipShape(.rect(cornerRadius: 10))
+                        .foregroundColor(.gray)
+                        .frame(width: width, height: height, alignment: .center)
+                }
             }
         }
-        .ignoresSafeArea()
     }
-}
-
-
-#Preview {
-    CoinDetailView(coinId: 1, coin: Coin(id: 1, name: "Bitcoin", symbol: "BTC", quote: .init(USD: .init(price: 26754.30, volume_24h: 1, market_cap: 1, percent_change_24h: 0.25)), cmc_rank: 1))
-}
+    
+    
+    #Preview {
+        CoinDetailView(coinId: 1027, coin: Coin(id: 1027, name: "Etherueum", symbol: "ETH", quote: .init(USD: .init(price: 26754.30, volume_24h: 1, market_cap: 1, market_cap_dominance: 1, percent_change_24h: 0.25)), cmc_rank: 2))
+    }

@@ -19,6 +19,7 @@ struct Coin: Codable, Identifiable {
             let price: Double
             let volume_24h: Double
             let market_cap: Double
+            let market_cap_dominance: Double
             let percent_change_24h: Double
         }
     }

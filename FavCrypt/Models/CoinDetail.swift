@@ -25,6 +25,10 @@ struct CoinInfo: Codable {
         let website: [String]
         let twitter: [String]
         let facebook: [String]
+        let reddit: [String]
+        let technical_doc: [String]
+        let explorer: [String]
+        let source_code: [String]
     }
 }
 
