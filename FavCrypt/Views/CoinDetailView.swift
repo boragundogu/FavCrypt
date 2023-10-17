@@ -263,39 +263,40 @@ struct CoinDetailView: View {
                     VStack {
                         HStack {
                             Image(systemName: "network")
-                            Button {
-                                isShowingLinks.toggle()
-                            } label: {
-                                Text("Chain Explorers")
-                                    .foregroundStyle(.white)
-                            }
-//                            Menu {
-//                                ForEach(coinInfo.urls.explorer, id: \.self) { link in
-//                                    if let cleanLink = cleanURL(link) {
-//                                        Button(action: {
-//                                            if let url = URL(string: link) {
-//                                                UIApplication.shared.open(url)
-//                                            }
-//                                        }) {
-//                                            Text(cleanLink)
-//                                                .font(.system(size: 11))
-//                                                .lineLimit(1)
-//                                                .minimumScaleFactor(0.7)
-//                                                .foregroundStyle(.white)
-//                                                .background {
-//                                                    Rectangle()
-//                                                        .clipShape(.rect(cornerRadius: 10))
-//                                                        .foregroundColor(.gray)
-//                                                        .frame(width: 125, height: 31, alignment: .center)
-//                                                }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            label: {
+                                .foregroundStyle(.white)
+//                            Button {
+//                                isShowingLinks.toggle()
+//                            } label: {
 //                                Text("Chain Explorers")
 //                                    .foregroundStyle(.white)
 //                            }
+                            Menu {
+                                ForEach(coinInfo.urls.explorer, id: \.self) { link in
+                                    if let cleanLink = cleanURL(link) {
+                                        Button(action: {
+                                            if let url = URL(string: link) {
+                                                UIApplication.shared.open(url)
+                                            }
+                                        }) {
+                                            Text(cleanLink)
+                                                .font(.system(size: 11))
+                                                .lineLimit(1)
+                                                .minimumScaleFactor(0.7)
+                                                .foregroundStyle(.white)
+                                                .background {
+                                                    Rectangle()
+                                                        .clipShape(.rect(cornerRadius: 10))
+                                                        .foregroundColor(.gray)
+                                                        .frame(width: 125, height: 31, alignment: .center)
+                                                }
+                                        }
+                                    }
+                                }
+                            }
+                            label: {
+                                Text("Chain Explorers")
+                                    .foregroundStyle(.white)
+                            }
                         }
                         .padding()
                         .background {
@@ -315,7 +316,7 @@ struct CoinDetailView: View {
                                                 }
                                             }) {
                                                 Text(cleanLink)
-                                                    .font(.system(size: 11))
+                                                    .font(.system(size: 12))
                                                     .lineLimit(1)
                                                     .minimumScaleFactor(0.7)
                                                     .foregroundStyle(.white)
