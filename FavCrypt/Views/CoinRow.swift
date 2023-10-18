@@ -20,9 +20,9 @@ struct CoinRow: View {
     
     var body: some View {
         HStack {
+                Spacer()
                 Text("\(coin.cmc_rank)").foregroundStyle(.white)
                     .frame(width: 50, height: 50, alignment: .center)
-                Spacer()
                 HStack {
                     AsyncImage(url: URL(string: "https://s2.coinmarketcap.com/static/img/coins/64x64/\(coin.id).png")) { phase in
                         switch phase {
@@ -60,10 +60,8 @@ struct CoinRow: View {
                         }
                     }
                 }
-                Spacer()
                 Text(listViewModel.formatPrice(coin.price)).foregroundStyle(.white)
                     .frame(width: 100, height: 100, alignment: .leading)
-                Spacer()
                 if coin.quote.USD.percent_change_24h > 0.0 {
                     Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
                         .frame(width: 70, height: 70, alignment: .center)
@@ -71,7 +69,7 @@ struct CoinRow: View {
                             Rectangle()
                                 .foregroundStyle(.green)
                                 .clipShape(.rect(cornerRadius: 10))
-                                .frame(width: 67, height: 31, alignment: .leading)
+                                .frame(width: 75, height: 31, alignment: .leading)
                         }
                 }
                 else{
@@ -81,12 +79,13 @@ struct CoinRow: View {
                             Rectangle()
                                 .foregroundStyle(.red)
                                 .clipShape(.rect(cornerRadius: 10))
-                                .frame(width: 67, height: 31, alignment: .center)
+                                .frame(width: 75, height: 31, alignment: .center)
                         }
                 }
                 Spacer()
             }
-        .padding(.leading, -10)
+        .frame(height: 70)
+        .padding(.leading, -20)
             .background {
                 NavigationLink(destination: CoinDetailView(coinId: coin.id, coin: coin)) {}.opacity(0)
                 Color("bgColor")

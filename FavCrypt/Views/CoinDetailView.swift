@@ -10,10 +10,8 @@ import SwiftUI
 struct CoinDetailView: View {
     @StateObject private var detailViewModel: CoinDetailViewModel
     @StateObject private var listViewModel: CoinListViewModel
-    @State private var isShowingAlert = false
     var coinId: Int
     var coin: Coin
-    @State private var isShowingLinks = false
     
     init(coinId: Int, coin: Coin) {
         self.coinId = coinId
@@ -84,7 +82,7 @@ struct CoinDetailView: View {
                                             Rectangle()
                                                 .foregroundStyle(.green)
                                                 .clipShape(.rect(cornerRadius: 10))
-                                                .frame(width: 67, height: 31, alignment: .center)
+                                                .frame(width: 75, height: 31, alignment: .center)
                                         }
                                 }
                                 else {
@@ -94,7 +92,7 @@ struct CoinDetailView: View {
                                             Rectangle()
                                                 .foregroundStyle(.red)
                                                 .clipShape(.rect(cornerRadius: 10))
-                                                .frame(width: 67, height: 31, alignment: .center)
+                                                .frame(width: 75, height: 31, alignment: .center)
                                         }
                                 }
                             }
@@ -192,46 +190,15 @@ struct CoinDetailView: View {
                         .font(.system(size: 23))
                         .padding(.leading, -175)
                         .padding(.bottom, -3)
-                    
                     HStack {
-                        Button {
-                            if coinInfo.urls.twitter != [] {
-                                if let twitterURL = URL(string: coinInfo.urls.twitter.first ?? "") {
-                                    if let username = twitterURL.pathComponents.last {
-                                        if !username.isEmpty {
-                                            if let appURL = URL(string: "twitter://user?screen_name=\(username)") {
-                                                if UIApplication.shared.canOpenURL(appURL) {
-                                                    UIApplication.shared.open(appURL)
-                                                    return
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if let webURL = URL(string: coinInfo.urls.twitter.first ?? "") {
-                                    UIApplication.shared.open(webURL)
-                                }
-                            }
-                        } label: {
-                            HStack {
-                                Image("x")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 20, height: 20, alignment: .center)
-                                    .foregroundStyle(.white)
-                                    .opacity(0.8)
-                                Text("Twitter")
-                                    .foregroundStyle(.white)
-                            }
-                            .padding()
-                            .background {
-                                Rectangle()
-                                    .clipShape(.rect(cornerRadius: 10))
-                                    .foregroundColor(.gray)
-                                    .frame(width: 100, height: 31, alignment: .center)
-                            }
-                            .disabled(coinInfo.urls.twitter == [] ? true : false)
-                            .opacity(coinInfo.urls.twitter == [] ? 0.2 : 1)
+                        if !coinInfo.urls.twitter.isEmpty {
+                            ButtonWithIconForTwitter(imageName: "x", text: "Twitter", url: coinInfo.urls.twitter.first ?? "", width: 120, height: 30)
+                                .padding()
+                        } else {
+                            ButtonWithIconForTwitter(imageName: "x", text: "Twitter", url: coinInfo.urls.twitter.first ?? "", width: 120, height: 30)
+                                .padding()
+                                .disabled(true)
+                                .opacity(0.2)
                         }
                         if !coinInfo.urls.facebook.isEmpty {
                             ButtonWithIcon(imageName: "facebook", text: "Facebook", url: coinInfo.urls.facebook.first ?? "", width: 120, height: 30)
@@ -264,12 +231,6 @@ struct CoinDetailView: View {
                         HStack {
                             Image(systemName: "network")
                                 .foregroundStyle(.white)
-//                            Button {
-//                                isShowingLinks.toggle()
-//                            } label: {
-//                                Text("Chain Explorers")
-//                                    .foregroundStyle(.white)
-//                            }
                             Menu {
                                 ForEach(coinInfo.urls.explorer, id: \.self) { link in
                                     if let cleanLink = cleanURL(link) {
@@ -293,10 +254,10 @@ struct CoinDetailView: View {
                                     }
                                 }
                             }
-                            label: {
-                                Text("Chain Explorers")
-                                    .foregroundStyle(.white)
-                            }
+                        label: {
+                            Text("Chain Explorers")
+                                .foregroundStyle(.white)
+                        }
                         }
                         .padding()
                         .background {
@@ -304,32 +265,6 @@ struct CoinDetailView: View {
                                 .clipShape(.rect(cornerRadius: 10))
                                 .foregroundColor(.gray)
                                 .frame(width: 170, height: 31, alignment: .center)
-                        }
-                        
-                        if isShowingLinks {
-                                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 25) {
-                                    ForEach(coinInfo.urls.explorer, id: \.self) { link in
-                                        if let cleanLink = cleanURL(link) {
-                                            Button(action: {
-                                                if let url = URL(string: link) {
-                                                    UIApplication.shared.open(url)
-                                                }
-                                            }) {
-                                                Text(cleanLink)
-                                                    .font(.system(size: 12))
-                                                    .lineLimit(1)
-                                                    .minimumScaleFactor(0.7)
-                                                    .foregroundStyle(.white)
-                                                    .background {
-                                                        Rectangle()
-                                                            .clipShape(.rect(cornerRadius: 10))
-                                                            .foregroundColor(.gray)
-                                                            .frame(width: 125, height: 31, alignment: .center)
-                                                    }
-                                            }
-                                        }
-                                    }
-                                }
                         }
                     }
                 }
@@ -369,7 +304,6 @@ struct ButtonWithIcon: View {
     
     var body: some View {
         Button {
-            
             if let webURL = URL(string: url) {
                 UIApplication.shared.open(webURL)
             }
@@ -394,7 +328,52 @@ struct ButtonWithIcon: View {
     }
 }
 
+struct ButtonWithIconForTwitter: View {
+    var imageName: String
+    var text: String
+    var url: String
+    var width: CGFloat
+    var height: CGFloat
+    
+    var body: some View {
+        Button {
+            if let twitterURL = URL(string: url) {
+                if let username = twitterURL.pathComponents.last {
+                    if !username.isEmpty {
+                        if let appURL = URL(string: "twitter://user?screen_name=\(username)") {
+                            if UIApplication.shared.canOpenURL(appURL) {
+                                UIApplication.shared.open(appURL)
+                                return
+                            }
+                        }
+                    }
+                }
+                if let webURL = URL(string: url) {
+                    UIApplication.shared.open(webURL)
+                }
+            }
+        } label: {
+            HStack {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20, alignment: .center)
+                    .foregroundStyle(.white)
+                    .opacity(0.8)
+                Text(text)
+                    .foregroundStyle(.white)
+            }
+            .background {
+                Rectangle()
+                    .clipShape(.rect(cornerRadius: 10))
+                    .foregroundColor(.gray)
+                    .frame(width: width, height: height, alignment: .center)
+            }
+        }
+    }
+}
+
 
 #Preview {
-    CoinDetailView(coinId: 1027, coin: Coin(id: 1027, name: "Etherueum", symbol: "ETH", quote: .init(USD: .init(price: 26754.30, volume_24h: 1, market_cap: 1, market_cap_dominance: 1, percent_change_24h: 0.25)), cmc_rank: 2))
+    CoinDetailView(coinId: 1, coin: Coin(id: 1027, name: "Etherueum", symbol: "ETH", quote: .init(USD: .init(price: 26754.30, volume_24h: 1, market_cap: 1, market_cap_dominance: 1, percent_change_24h: 0.25)), cmc_rank: 2))
 }

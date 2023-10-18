@@ -11,7 +11,7 @@ import SwiftUI
 struct FavCryptApp: App {
     var body: some Scene {
         WindowGroup {
-            TestView()
+            ContentView()
         }
     }
 }

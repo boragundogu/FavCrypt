@@ -18,56 +18,69 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                Section(header: HStack {
-                    Button(action: {
-                        currentSortBy = ""
-                        isPriceReversed = true
-                        isPercentReversed = true
-                        isMarketCapReversed = true
-                        isReversed.toggle()
-                    })
-                    {
-                        Image(systemName: isReversed ? "number.circle.fill" : "number.circle")
-                            .scaleEffect(1.2)
-                        
-                    }
-                    Spacer()
-                    Button(action: {
-                        currentSortBy = "marketCap"
-                        isMarketCapReversed.toggle()
-                        isReversed = false
-                        isPercentReversed = true
-                        isPriceReversed = true
-                    })
-                    {
-                        Image(systemName: isMarketCapReversed ? "chart.pie" : "chart.pie.fill")
+                Section(header: VStack {
+                    Button {
+                        print("xx")
+                    } label: {
+                        Image(systemName: "magnifyingglass")
                             .scaleEffect(1.2)
                     }
-                    Spacer()
-                    Button(action: {
-                        currentSortBy = "price"
-                        isPriceReversed.toggle()
-                        isReversed = false
-                        isPercentReversed = true
-                        isMarketCapReversed = true
-                    }) {
-                        Image(systemName: isPriceReversed ? "dollarsign.circle" : "dollarsign.circle.fill")
-                            .scaleEffect(1.2)
+                    .offset(x: 140, y: -10)
+                    
+                    HStack(spacing: 80) {
+                        Spacer()
+                        Button(action: {
+                            currentSortBy = ""
+                            isPriceReversed = true
+                            isPercentReversed = true
+                            isMarketCapReversed = true
+                            isReversed.toggle()
+                        })
+                        {
+                            Image(systemName: isReversed ? "number.circle.fill" : "number.circle")
+                                .scaleEffect(1.2)
+                        }
+                        .offset(x: -2)
+                        Button(action: {
+                            currentSortBy = "marketCap"
+                            isMarketCapReversed.toggle()
+                            isReversed = false
+                            isPercentReversed = true
+                            isPriceReversed = true
+                        })
+                        {
+                            Image(systemName: isMarketCapReversed ? "chart.pie" : "chart.pie.fill")
+                                .scaleEffect(1.2)
+                        }
+                        .offset(x: -20)
+                        Button(action: {
+                            currentSortBy = "price"
+                            isPriceReversed.toggle()
+                            isReversed = false
+                            isPercentReversed = true
+                            isMarketCapReversed = true
+                        }) {
+                            Image(systemName: isPriceReversed ? "dollarsign.circle" : "dollarsign.circle.fill")
+                                .scaleEffect(1.2)
+                        }
+                        .offset(x: -20)
+                        Button(action: {
+                            currentSortBy = "percent"
+                            isPercentReversed.toggle()
+                            isPriceReversed = true
+                            isReversed = false
+                            isMarketCapReversed = true
+                        }) {
+                            Image(systemName: "percent")
+                                .scaleEffect(1.2)
+                        }
+                        .offset(x: -5)
+                        Spacer()
                     }
-                    Spacer()
-                    Button(action: {
-                        currentSortBy = "percent"
-                        isPercentReversed.toggle()
-                        isPriceReversed = true
-                        isReversed = false
-                        isMarketCapReversed = true
-                    }) {
-                        Image(systemName: "percent")
-                            .scaleEffect(1.2)
+                    .padding(.top, 20)
+                    .padding(.leading, -20)
+                    .offset(y: -2)
                     }
-                }
-                    .padding(.leading, -10)
-                    .offset(y: 10)
                 ) {
                     
                     let sortedCoins: [Coin] = {
