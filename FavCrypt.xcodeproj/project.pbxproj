@@ -17,7 +17,6 @@
 		09827F572ACD848900068880 /* CoinListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09827F562ACD848900068880 /* CoinListViewModel.swift */; };
 		09D9BF2F2AD32B18007F83F4 /* CoinDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D9BF2E2AD32B18007F83F4 /* CoinDetail.swift */; };
 		09D9BF312AD32B35007F83F4 /* CoinDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D9BF302AD32B35007F83F4 /* CoinDetailViewModel.swift */; };
-		09ED91442ADD6C4600F5781A /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09ED91432ADD6C4600F5781A /* TestView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +32,6 @@
 		09827F562ACD848900068880 /* CoinListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinListViewModel.swift; sourceTree = "<group>"; };
 		09D9BF2E2AD32B18007F83F4 /* CoinDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetail.swift; sourceTree = "<group>"; };
 		09D9BF302AD32B35007F83F4 /* CoinDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinDetailViewModel.swift; sourceTree = "<group>"; };
-		09ED91432ADD6C4600F5781A /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +98,6 @@
 				09827F452ACD830A00068880 /* ContentView.swift */,
 				0981C95D2AD02992008D93D1 /* CoinDetailView.swift */,
 				0981C9612AD1A481008D93D1 /* CoinRow.swift */,
-				09ED91432ADD6C4600F5781A /* TestView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -194,7 +191,6 @@
 				09827F442ACD830A00068880 /* FavCryptApp.swift in Sources */,
 				09D9BF312AD32B35007F83F4 /* CoinDetailViewModel.swift in Sources */,
 				0981C9622AD1A481008D93D1 /* CoinRow.swift in Sources */,
-				09ED91442ADD6C4600F5781A /* TestView.swift in Sources */,
 				0981C95E2AD02992008D93D1 /* CoinDetailView.swift in Sources */,
 				09827F572ACD848900068880 /* CoinListViewModel.swift in Sources */,
 			);

@@ -7,25 +7,52 @@
 
 import SwiftUI
 
+
+
 struct ContentView: View {
+    
     @StateObject private var coinViewModel = CoinListViewModel()
     @State private var isReversed = true
     @State private var isPercentReversed = true
     @State private var isPriceReversed = true
     @State private var isMarketCapReversed = true
     @State private var currentSortBy = ""
+    @State private var searchText = ""
     
     var body: some View {
         NavigationView {
             List {
                 Section(header: VStack {
-                    Button {
-                        print("xx")
-                    } label: {
+                    HStack(spacing: 0) {
                         Image(systemName: "magnifyingglass")
-                            .scaleEffect(1.2)
+                            .foregroundStyle(.gray)
+                            .padding(.leading, -20)
+                            .scaleEffect(1.5)
+                        TextField("Ara", text: $searchText).scaleEffect(1.2)
+                            .padding(.leading, 30)
+                            .textCase(nil)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.gray.opacity(0.4))
+                                    .frame(width: 375, height: 35, alignment: .center)
+                            )
+                            .onTapGesture {
+                                hideKeyboard()
+                            }
+                            .frame(width: 295)
+                        Button {
+                            searchText = ""
+                        } label: {
+                            if !searchText.isEmpty {
+                                Image(systemName: "x.circle.fill")
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                        .frame(width: 50, height: 30, alignment: .center)
                     }
-                    .offset(x: 140, y: -10)
+                    .padding(.bottom)
+                    .padding(.leading, 40)
+                    
                     
                     HStack(spacing: 80) {
                         Spacer()
@@ -80,26 +107,41 @@ struct ContentView: View {
                     .padding(.top, 20)
                     .padding(.leading, -20)
                     .offset(y: -2)
+                }
+                    .onTapGesture {
+                        hideKeyboard()
                     }
                 ) {
-                    
-                    let sortedCoins: [Coin] = {
-                        switch currentSortBy {
-                        case "marketCap":
-                            return isMarketCapReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank})
-                        case "price":
-                            return isPriceReversed ? coinViewModel.coinData.sorted(by: {$0.price < $1.price}) : coinViewModel.coinData.sorted(by: {$0.price > $1.price})
-                        case "percent":
-                            return isPercentReversed ? coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h < $1.quote.USD.percent_change_24h}) : coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h > $1.quote.USD.percent_change_24h})
-                        default:
-                            return isReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank})
+                    if searchText.isEmpty {
+                        let sortedCoins: [Coin] = {
+                            switch currentSortBy {
+                            case "marketCap":
+                                return isMarketCapReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank})
+                            case "price":
+                                return isPriceReversed ? coinViewModel.coinData.sorted(by: {$0.price < $1.price}) : coinViewModel.coinData.sorted(by: {$0.price > $1.price})
+                            case "percent":
+                                return isPercentReversed ? coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h < $1.quote.USD.percent_change_24h}) : coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h > $1.quote.USD.percent_change_24h})
+                            default:
+                                return isReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank})
+                            }
+                        }()
+                        
+                        ForEach(sortedCoins, id: \.id) { coin in
+                            CoinRow(coin: coin)
+                                .listRowBackground(Color("rowColor"))
+                                .listRowSeparator(.hidden)
                         }
-                    }()
-                    
-                    ForEach(sortedCoins, id: \.id) { coin in
-                        CoinRow(coin: coin)
-                            .listRowBackground(Color("rowColor"))
-                            .listRowSeparator(.hidden)
+                    }
+                    if !searchText.isEmpty {
+                        let searchLowercased = searchText.lowercased()
+                        
+                        ForEach(coinViewModel.coinData) { coin in
+                            if coin.name.localizedCaseInsensitiveContains(searchLowercased) || coin.symbol.localizedCaseInsensitiveContains(searchLowercased) {
+                                CoinRow(coin: coin)
+                                    .listRowBackground(Color("rowColor"))
+                                    .listRowSeparator(.hidden)
+                            }
+                        }
                     }
                 }
             }
@@ -113,7 +155,17 @@ struct ContentView: View {
             .onAppear {
                 coinViewModel.fetchCoinData()
             }
+            .gesture(DragGesture().onChanged { _ in
+                hideKeyboard()
+            })
         }
+    }
+}
+
+extension ContentView {
+    func hideKeyboard() {
+        let resign = #selector(UIResponder.resignFirstResponder)
+        UIApplication.shared.sendAction(resign, to: nil, from: nil, for: nil)
     }
 }
 

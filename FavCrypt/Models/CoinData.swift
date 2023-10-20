@@ -11,7 +11,6 @@ struct Coin: Codable, Identifiable {
     let quote: Quote
     let cmc_rank: Int
     
-    
     struct Quote: Codable {
         let USD: USD
         

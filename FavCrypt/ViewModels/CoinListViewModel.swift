@@ -4,7 +4,6 @@ import Foundation
 class CoinListViewModel: ObservableObject {
     @Published var coinData: [Coin] = []
     
-    
     func fetchCoinData() {
             if let url = URL(string: "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=200") {
                 var request = URLRequest(url: url)
