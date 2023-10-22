@@ -63,7 +63,7 @@ struct CoinRow: View {
             Text(listViewModel.formatPrice(coin.price)).foregroundStyle(.white)
                 .frame(width: 100, height: 100, alignment: .leading)
             if coin.quote.USD.percent_change_24h > 0.0 {
-                Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
+                Text("\(String(format: "%.2f", coin.quote.USD.percent_change_24h))" + "%")
                     .frame(width: 70, height: 70, alignment: .center)
                     .background {
                         Rectangle()
@@ -73,7 +73,7 @@ struct CoinRow: View {
                     }
             }
             else{
-                Text("\((String(coin.quote.USD.percent_change_24h).prefix(5)))" + "%")
+                Text("\(String(format: "%.2f", coin.quote.USD.percent_change_24h))" + "%")
                     .frame(width: 70, height: 70, alignment: .center)
                     .background {
                         Rectangle()

@@ -11,16 +11,7 @@ import SwiftUI
 struct FavCryptApp: App {
     var body: some Scene {
         WindowGroup {
-            TabView {
-                ContentView()
-                    .tabItem {
-                        Label("Menu", systemImage: "list.dash")
-                    }
-                EmptyView()
-                    .tabItem {
-                        Label("Test", systemImage: "square.and.pencil")
-                    }
-            }
+            ContentView()
         }
     }
 }
