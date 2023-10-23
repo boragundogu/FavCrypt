@@ -76,14 +76,6 @@ struct CoinDetailView: View {
                                     
                                     Spacer()
                                     if coin.quote.USD.percent_change_24h > 0 {
-                                        VStack {
-                                            Button {
-                                                NavigationLink(destination: CoinPrediction(coinId: coinId, coin: coin)) {
-                                                    Text("xx")
-                                                }
-                                            } label: {
-                                                Text("Prediction")
-                                            }
                                             Text("\(String(format: "%.2f", coin.quote.USD.percent_change_24h))" + "%")
                                                 .padding(30)
                                                 .background {
@@ -92,7 +84,6 @@ struct CoinDetailView: View {
                                                         .clipShape(.rect(cornerRadius: 10))
                                                         .frame(width: 75, height: 31, alignment: .center)
                                                 }
-                                        }
                                     }
                                     else {
                                         Text("\(String(format: "%.2f", coin.quote.USD.percent_change_24h))" + "%")
