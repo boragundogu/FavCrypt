@@ -23,7 +23,7 @@ struct CoinDetailView: View {
     var body: some View {
         ZStack {
             Color("bgColor")
-                VStack {
+                LazyVStack {
                     if let coinInfo = detailViewModel.coinInfo {
                         HStack {
                             AsyncImage(url: URL(string: "https://s2.coinmarketcap.com/static/img/coins/64x64/\(coin.id).png")) { phase in

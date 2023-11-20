@@ -60,8 +60,8 @@ struct CoinRow: View {
                     }
                 }
             }
-            Text(listViewModel.formatPrice(coin.price)).foregroundStyle(.white)
-                .frame(width: 100, height: 100, alignment: .leading)
+                Text(listViewModel.formatPrice(coin.price)).foregroundStyle(.white)
+                    .frame(width: 100, height: 100, alignment: .leading)
             if coin.quote.USD.percent_change_24h > 0.0 {
                 Text("\(String(format: "%.2f", coin.quote.USD.percent_change_24h))" + "%")
                     .frame(width: 70, height: 70, alignment: .center)

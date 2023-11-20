@@ -50,4 +50,9 @@ class CoinListViewModel: ObservableObject {
         return formattedPrice
     }
     
+    func calculatePrediction(d: Double, x: Double, n: Int) -> Double {
+        let result = d * pow(1 + (x / 100), Double(n))
+        return result
+    }
+    
 }

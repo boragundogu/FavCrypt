@@ -8,20 +8,56 @@
 import SwiftUI
 
 struct CoinPrediction: View {
-    @StateObject private var coinViewModel = CoinListViewModel()
-    @State private var selectedCoin = "Select Coin"
+    @StateObject private var coinVM = CoinListViewModel()
+    @State private var selectedCoinId = 0
+    @State var growthPercentage: Double?
+    @State private var isShowing = false
     
     var body: some View {
-        Picker(selection: $selectedCoin) {
-            ForEach(coinViewModel.coinData) { coin in
-                Text(coin.symbol)
+        VStack {
+            Picker("Select Coin", selection: $selectedCoinId) {
+                Text("Select Coin")
+                    .tag(-1)
+                ForEach(coinVM.coinData, id:\.id) { coin in
+                    Text(coin.name + " " + "(\(coin.symbol))")
+                        .tag(coin.id)
+                }
             }
-        } label: {
-            Text("Coins")
-        }
-        .labelsHidden()
-        .onAppear {
-            coinViewModel.fetchCoinData()
+            .onChange(of: selectedCoinId) { _ in
+                isShowing = false  // picker değeri değiştirdiğinde view'ı ilk hal getirir.
+            }
+            //.pickerStyle(.wheel)
+            .onAppear {
+                coinVM.fetchCoinData()
+            }
+            TextField("Growth Percentage", value: $growthPercentage, format: .number)
+            Button {
+                if selectedCoinId != -1 && !(growthPercentage ?? 0.0).isZero {
+                    isShowing.toggle()
+                } else {
+
+                    isShowing = false
+                }
+            } label: {
+                isShowing ? Text("") : Text("Prediction")
+            }
+            .disabled(selectedCoinId == -1 || (growthPercentage ?? 0.0).isZero)
+            if isShowing == true {
+                ForEach(coinVM.coinData) { coin in
+                    if selectedCoinId == coin.id {
+                        VStack {
+                            AsyncImage(url: URL(string: "https://s2.coinmarketcap.com/static/img/coins/64x64/\(coin.id).png"))
+                                .scaledToFill()
+                                .frame(width: 50, height: 50, alignment: .center)
+                                .clipShape(Circle())
+                            Text(coin.name)
+                            Text("\(coin.price)")
+                            let pred = coinVM.calculatePrediction(d: coin.price, x: growthPercentage ?? 0.0, n: 1)
+                            Text("\(pred)")
+                        }
+                    }
+                }
+            }
         }
         
     }
@@ -29,4 +65,5 @@ struct CoinPrediction: View {
 
 #Preview {
     CoinPrediction()
+    
 }
