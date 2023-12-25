@@ -109,7 +109,7 @@ struct MainView: View {
                             })
                             {
                                 HStack {
-                                    Text("Piyasa Değeri")
+                                    Text("Market Cap")
                                     Image(systemName: isMarketCapReversed ? "chart.pie" : "chart.pie.fill")
                                     .scaleEffect(0.7)
                                     .padding(.leading, -10)
@@ -127,7 +127,7 @@ struct MainView: View {
                                 isMarketCapReversed = true
                             }) {
                                 HStack {
-                                    Text("Fiyat")
+                                    Text("Price")
                                         .font(.system(size: 15))
                                     Image(systemName: isPriceReversed ? "dollarsign.circle" : "dollarsign.circle.fill")
                                         .scaleEffect(0.7)
