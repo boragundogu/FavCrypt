@@ -144,7 +144,7 @@ struct MainView: View {
                                 isReversed = false
                                 isMarketCapReversed = true
                             }) {
-                                Text("24s" + " " + "%")
+                                Text("24h" + " " + "%")
                                     .padding(.leading, 15)
                             }
                         }
