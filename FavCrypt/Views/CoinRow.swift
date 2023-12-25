@@ -24,8 +24,8 @@ struct CoinRow: View {
             Text("\(coin.cmc_rank)").foregroundStyle(.white)
                 .frame(width: 50, height: 50, alignment: .center)
             HStack {
-                AsyncImage(url: URL(string: "https://s2.coinmarketcap.com/static/img/coins/64x64/\(coin.id).png")) { phase in
-                    switch phase {
+                AsyncImage(url: URL(string: "https://s2.coinmarketcap.com/static/img/coins/64x64/\(coin.id).png")) { img in
+                    switch img {
                     case .empty:
                         Image(systemName: "photo")
                             .frame(width: 50, height: 50, alignment: .center)
@@ -60,10 +60,11 @@ struct CoinRow: View {
                     }
                 }
             }
-                Text(listViewModel.formatPrice(coin.price)).foregroundStyle(.white)
+                Text(listViewModel.formatPrice(coin.price)).foregroundStyle(Color("percentageColor"))
                     .frame(width: 100, height: 100, alignment: .leading)
             if coin.quote.USD.percent_change_24h > 0.0 {
                 Text("\(String(format: "%.2f", coin.quote.USD.percent_change_24h))" + "%")
+                    .foregroundStyle(Color("percentageColor"))
                     .frame(width: 70, height: 70, alignment: .center)
                     .background {
                         Rectangle()
@@ -74,6 +75,7 @@ struct CoinRow: View {
             }
             else{
                 Text("\(String(format: "%.2f", coin.quote.USD.percent_change_24h))" + "%")
+                    .foregroundStyle(Color("percentageColor"))
                     .frame(width: 70, height: 70, alignment: .center)
                     .background {
                         Rectangle()

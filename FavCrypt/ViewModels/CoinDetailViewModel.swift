@@ -13,7 +13,7 @@ class CoinDetailViewModel: ObservableObject {
 
     let baseURL = "https://pro-api.coinmarketcap.com/v2/cryptocurrency/info"
 
-    let apiKey = "0c72d01c-4dac-4df2-8cc8-b76dd663d9d7"
+    //let apiKey = "0c72d01c-4dac-4df2-8cc8-b76dd663d9d7"
 
     func fetchCoinDetail() {
         if var urlComponents = URLComponents(string: baseURL) {

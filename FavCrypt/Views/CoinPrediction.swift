@@ -11,9 +11,19 @@ struct CoinPrediction: View {
     @StateObject private var coinVM = CoinListViewModel()
     @State private var selectedCoinId = 0
     @State var growthPercentage: Double?
+    @State private var placeholder: String = "Select"
+    @State private var selection: String?
     @State private var isShowing = false
+    //
+    var maxWidth: CGFloat = 180
+    var cornerRadius: CGFloat = 15
+    @State private var showOption = false
+    @Environment(\.colorScheme) private var scheme
+    
     
     var body: some View {
+        
+        
         VStack {
             Picker("Select Coin", selection: $selectedCoinId) {
                 Text("Select Coin")
@@ -24,7 +34,7 @@ struct CoinPrediction: View {
                 }
             }
             .onChange(of: selectedCoinId) { _ in
-                isShowing = false  // picker değeri değiştirdiğinde view'ı ilk hal getirir.
+                isShowing = false
             }
             //.pickerStyle(.wheel)
             .onAppear {
@@ -35,7 +45,7 @@ struct CoinPrediction: View {
                 if selectedCoinId != -1 && !(growthPercentage ?? 0.0).isZero {
                     isShowing.toggle()
                 } else {
-
+                    
                     isShowing = false
                 }
             } label: {
@@ -61,7 +71,10 @@ struct CoinPrediction: View {
         }
         
     }
+    
 }
+
+
 
 #Preview {
     CoinPrediction()

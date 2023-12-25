@@ -14,14 +14,52 @@ struct MainPage: View {
     @State private var isPercentReversed = true
     @State private var isPriceReversed = true
     @State private var isMarketCapReversed = true
-    @State private var isSortingButtonShow = false
     @State private var currentSortBy = ""
     @State private var searchText = ""
     
     var body: some View {
         NavigationView {
             List {
-                Section(header: VStack {
+                    if searchText.isEmpty {
+                        let sortedCoins: [Coin] = {
+                            switch currentSortBy {
+                            case "marketCap":
+                                return isMarketCapReversed ? coinViewModel.coinData.sorted(by: {$0.volume_24h < $1.volume_24h}) : coinViewModel.coinData.sorted(by: {$0.volume_24h > $1.volume_24h})
+                            case "price":
+                                return isPriceReversed ? coinViewModel.coinData.sorted(by: {$0.price < $1.price}) : coinViewModel.coinData.sorted(by: {$0.price > $1.price})
+                            case "percent":
+                                return isPercentReversed ? coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h < $1.quote.USD.percent_change_24h}) : coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h > $1.quote.USD.percent_change_24h})
+                            default:
+                                return isReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank})
+                            }
+                        }()
+                        
+                        ForEach(sortedCoins, id: \.id) { coin in
+                            CoinRow(coin: coin)
+                                .listRowBackground(Color("rowColor"))
+                                .listRowSeparator(.hidden)
+                        }
+                    }
+                    if !searchText.isEmpty {
+                        let searchLowercased = searchText.lowercased()
+                        
+                        ForEach(coinViewModel.coinData) { coin in
+                            if coin.name.localizedCaseInsensitiveContains(searchLowercased) || coin.symbol.localizedCaseInsensitiveContains(searchLowercased) {
+                                CoinRow(coin: coin)
+                                    .listRowBackground(Color("rowColor"))
+                                    .listRowSeparator(.hidden)
+                            }
+                        }
+                    }
+                }
+            }
+            .scrollContentBackground(.hidden) // list background değişmesi için gerekli !
+            .background(Color("bgColor"))
+            .refreshable {
+                coinViewModel.fetchCoinData()
+            }
+            .toolbar {
+                VStack {
                     HStack(spacing: 0) {
                         Image(systemName: "magnifyingglass")
                             .foregroundStyle(.gray)
@@ -37,12 +75,10 @@ struct MainPage: View {
                             )
                             .onTapGesture {
                                 hideKeyboard()
-                                isSortingButtonShow.toggle()
                             }
                             .frame(width: 295)
                         Button {
                             searchText = ""
-                            isSortingButtonShow = false
                         } label: {
                             if !searchText.isEmpty {
                                 Image(systemName: "x.circle.fill")
@@ -54,7 +90,6 @@ struct MainPage: View {
                     .padding(.bottom)
                     .padding(.leading, 40)
                     
-                    if isSortingButtonShow == false {
                         HStack(spacing: 80) {
                             Spacer()
                             Button(action: {
@@ -109,63 +144,14 @@ struct MainPage: View {
                         .padding(.top, 20)
                         .padding(.leading, -20)
                         .offset(y: -2)
-                    }
-                }
-                    .onTapGesture {
-                        hideKeyboard()
-                    }
-                ) {
-                    if searchText.isEmpty {
-                        let sortedCoins: [Coin] = {
-                            switch currentSortBy {
-                            case "marketCap":
-                                return isMarketCapReversed ? coinViewModel.coinData.sorted(by: {$0.volume_24h < $1.volume_24h}) : coinViewModel.coinData.sorted(by: {$0.volume_24h > $1.volume_24h})
-                            case "price":
-                                return isPriceReversed ? coinViewModel.coinData.sorted(by: {$0.price < $1.price}) : coinViewModel.coinData.sorted(by: {$0.price > $1.price})
-                            case "percent":
-                                return isPercentReversed ? coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h < $1.quote.USD.percent_change_24h}) : coinViewModel.coinData.sorted(by: {$0.quote.USD.percent_change_24h > $1.quote.USD.percent_change_24h})
-                            default:
-                                return isReversed ? coinViewModel.coinData.sorted(by: {$0.cmc_rank < $1.cmc_rank}) : coinViewModel.coinData.sorted(by: {$0.cmc_rank > $1.cmc_rank})
-                            }
-                        }()
-                        
-                        ForEach(sortedCoins, id: \.id) { coin in
-                            CoinRow(coin: coin)
-                                .listRowBackground(Color("rowColor"))
-                                .listRowSeparator(.hidden)
-                        }
-                    }
-                    if !searchText.isEmpty {
-                        let searchLowercased = searchText.lowercased()
-                        
-                        ForEach(coinViewModel.coinData) { coin in
-                            if coin.name.localizedCaseInsensitiveContains(searchLowercased) || coin.symbol.localizedCaseInsensitiveContains(searchLowercased) {
-                                CoinRow(coin: coin)
-                                    .listRowBackground(Color("rowColor"))
-                                    .listRowSeparator(.hidden)
-                            }
-                        }
-                    }
                 }
             }
-            .scrollContentBackground(.hidden) // list background değişmesi için gerekli !
-            .background(Color("bgColor"))
-            .refreshable {
-                coinViewModel.fetchCoinData()
-            }
-            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 coinViewModel.fetchCoinData()
             }
-            .gesture(DragGesture().onChanged { _ in
-                hideKeyboard()
-                isSortingButtonShow = false
-            })
         }
     }
-    
-}
 
 extension MainPage {
     func hideKeyboard() {
